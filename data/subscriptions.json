@@ -1,14 +1,5 @@
 [
   {
-    "id": 1,
-    "chatId": "448762662",
-    "label": "Skoda Superb",
-    "category_id": 1,
-    "marka_id": 70,
-    "model_id": 3167,
-    "s_yers": 2015
-  },
-  {
     "id": 2,
     "chatId": "448762662",
     "label": "VW Passat B8 дизель автомат",
