@@ -113,5 +113,120 @@
     "price_do": 16000,
     "fuel_id": 1,
     "drive_id": 1
+  },
+  {
+    "id": 12,
+    "chatId": "394563963",
+    "label": "VW Passat B8 дизель автомат",
+    "category_id": 1,
+    "marka_id": 84,
+    "model_id": 39690,
+    "s_yers": 2015,
+    "po_yers": 2019,
+    "price_do": 16000,
+    "fuel_id": 2,
+    "gear_id": 2
+  },
+  {
+    "id": 13,
+    "chatId": "394563963",
+    "label": "Skoda Octavia A8 1.4 TSI автомат",
+    "category_id": 1,
+    "marka_id": 70,
+    "model_id": 652,
+    "s_yers": 2020,
+    "price_do": 19000,
+    "fuel_id": 1,
+    "gear_id": 2
+  },
+  {
+    "id": 14,
+    "chatId": "394563963",
+    "label": "Skoda Superb дизель 2015-2017",
+    "category_id": 1,
+    "marka_id": 70,
+    "model_id": 3167,
+    "s_yers": 2015,
+    "po_yers": 2017,
+    "price_do": 15000,
+    "fuel_id": 2
+  },
+  {
+    "id": 15,
+    "chatId": "394563963",
+    "label": "Skoda Superb дизель 2017",
+    "category_id": 1,
+    "marka_id": 70,
+    "model_id": 3167,
+    "s_yers": 2017,
+    "po_yers": 2017,
+    "price_do": 15500,
+    "fuel_id": 2
+  },
+  {
+    "id": 16,
+    "chatId": "394563963",
+    "label": "Skoda Superb дизель 2019",
+    "category_id": 1,
+    "marka_id": 70,
+    "model_id": 3167,
+    "s_yers": 2019,
+    "po_yers": 2019,
+    "price_do": 20000,
+    "fuel_id": 2
+  },
+  {
+    "id": 17,
+    "chatId": "394563963",
+    "label": "VW Tiguan дизель/бензин 4x4 (перевіряти вручну не-US і привід)",
+    "category_id": 1,
+    "marka_id": 84,
+    "model_id": 2692,
+    "s_yers": 2017,
+    "price_do": 22000
+  },
+  {
+    "id": 18,
+    "chatId": "394563963",
+    "label": "Skoda Octavia 2.0 дизель / 1.4 TSI",
+    "category_id": 1,
+    "marka_id": 70,
+    "model_id": 652,
+    "s_yers": 2017,
+    "price_do": 13500
+  },
+  {
+    "id": 19,
+    "chatId": "394563963",
+    "label": "Audi Q5 бензин 2.0",
+    "category_id": 1,
+    "marka_id": 6,
+    "model_id": 3222,
+    "s_yers": 2018,
+    "price_do": 20000,
+    "fuel_id": 1
+  },
+  {
+    "id": 20,
+    "chatId": "394563963",
+    "label": "Skoda Superb дизель 2016+",
+    "category_id": 1,
+    "marka_id": 70,
+    "model_id": 3167,
+    "s_yers": 2016,
+    "price_do": 18000,
+    "fuel_id": 2
+  },
+  {
+    "id": 21,
+    "chatId": "394563963",
+    "label": "Audi A4 B9 бензин quattro",
+    "category_id": 1,
+    "marka_id": 6,
+    "model_id": 47,
+    "s_yers": 2015,
+    "price_do": 16000,
+    "fuel_id": 1,
+    "drive_id": 1
   }
 ]
