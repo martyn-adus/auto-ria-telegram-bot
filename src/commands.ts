@@ -22,6 +22,22 @@ function isSkip(text: string): boolean {
   return SKIP_WORDS.includes(text.trim().toLowerCase());
 }
 
+const FUEL_LABELS: Record<number, string> = { 1: "бензин", 2: "дизель" };
+const GEAR_LABELS: Record<number, string> = { 2: "автомат" };
+const DRIVE_LABELS: Record<number, string> = { 1: "повний", 3: "задній" };
+
+function formatSubscription(s: Subscription): string {
+  const parts = [
+    `#${s.id} ${s.label}`,
+    `рік ${s.s_yers ?? "*"}-${s.po_yers ?? "*"}`,
+    `ціна ${s.price_ot ?? "*"}-${s.price_do ?? "*"}`,
+  ];
+  if (s.fuel_id) parts.push(FUEL_LABELS[s.fuel_id] ?? `паливо #${s.fuel_id}`);
+  if (s.gear_id) parts.push(GEAR_LABELS[s.gear_id] ?? `КП #${s.gear_id}`);
+  if (s.drive_id) parts.push(DRIVE_LABELS[s.drive_id] ?? `привід #${s.drive_id}`);
+  return parts.join(" | ");
+}
+
 function summary(data: WizardData): string {
   return [
     `Марка: ${data.markaName}`,
@@ -49,12 +65,7 @@ export async function handleMessage(
   if (lower === "/list") {
     const subs = loadSubscriptions().filter((s) => s.chatId === chatId);
     if (subs.length === 0) return "У тебе ще немає фільтрів. Напиши /filter щоб додати.";
-    return subs
-      .map(
-        (s) =>
-          `#${s.id} ${s.label} | рік ${s.s_yers ?? "*"}-${s.po_yers ?? "*"} | ціна ${s.price_ot ?? "*"}-${s.price_do ?? "*"}`
-      )
-      .join("\n");
+    return subs.map(formatSubscription).join("\n");
   }
 
   if (lower.startsWith("/remove")) {
