@@ -1,0 +1,20 @@
+{
+  "name": "auto-ria-telegram-bot",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Моніторить нові оголошення на AUTO.RIA за заданими фільтрами і надсилає їх у Telegram",
+  "scripts": {
+    "check": "tsx src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.10",
+    "tsx": "^4.16.2",
+    "typescript": "^5.5.4"
+  }
+}
