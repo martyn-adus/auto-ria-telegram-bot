@@ -1,7 +1,10 @@
 {
   "394563963": {
-    "step": "marka",
-    "data": {}
+    "step": "model",
+    "data": {
+      "markaId": 70,
+      "markaName": "Skoda"
+    }
   },
   "448762662": {
     "step": "marka",
