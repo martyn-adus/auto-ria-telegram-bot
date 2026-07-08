@@ -1,4 +1,6 @@
-export interface Watch {
+export interface Subscription {
+  id: number;
+  chatId: string;
   label: string;
   category_id: number;
   marka_id: number;
@@ -17,3 +19,35 @@ export interface AutoInfo {
 }
 
 export type SeenStore = Record<string, string[]>;
+
+export interface WizardData {
+  markaId?: number;
+  markaName?: string;
+  modelId?: number;
+  modelName?: string;
+  s_yers?: number;
+  po_yers?: number;
+  price_ot?: number;
+  price_do?: number;
+}
+
+export type WizardStep =
+  | "marka"
+  | "model"
+  | "yearFrom"
+  | "yearTo"
+  | "priceFrom"
+  | "priceTo"
+  | "confirm";
+
+export interface WizardEntry {
+  step: WizardStep;
+  data: WizardData;
+}
+
+export type WizardStore = Record<string, WizardEntry>;
+
+export interface NamedValue {
+  name: string;
+  value: number;
+}
