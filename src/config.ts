@@ -24,3 +24,5 @@ export const subscriptionsPath = path.join(rootDir, "data", "subscriptions.json"
 export const wizardStatePath = path.join(rootDir, "data", "wizard_state.json");
 export const telegramOffsetPath = path.join(rootDir, "data", "telegram_offset.json");
 export const seenStorePath = path.join(rootDir, "data", "seen.json");
+export const marksCachePath = path.join(rootDir, "data", "marks_cache.json");
+export const lastCheckPath = path.join(rootDir, "data", "last_check.json");

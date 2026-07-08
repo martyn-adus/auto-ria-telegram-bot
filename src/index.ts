@@ -6,8 +6,16 @@ import { handleMessage } from "./commands.js";
 import { loadSubscriptions } from "./subscriptions.js";
 import { loadSeen, saveSeen } from "./store.js";
 import { searchNewIds, getInfo } from "./autoRia.js";
+import { persistMarksCache } from "./marksApi.js";
+import { loadLastCheck, saveLastCheck } from "./lastCheck.js";
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+const LISTING_CHECK_INTERVAL_MS = 5 * 60 * 1000;
+
+function isRateLimit(err: unknown): boolean {
+  return err instanceof Error && err.message.includes("429");
+}
 
 async function processTelegramMessages(): Promise<void> {
   const offset = loadOffset();
@@ -33,7 +41,10 @@ async function processTelegramMessages(): Promise<void> {
       if (reply) await sendMessage(chatId, reply);
     } catch (err) {
       console.error(`Помилка обробки повідомлення від ${chatId}:`, err);
-      await sendMessage(chatId, "Сталася помилка. Спробуй ще раз пізніше.");
+      const text = isRateLimit(err)
+        ? "AUTO.RIA тимчасово обмежила кількість запитів (погодинний ліміт). Спробуй через кілька хвилин."
+        : "Сталася помилка. Спробуй ще раз пізніше.";
+      await sendMessage(chatId, text);
     }
   }
 
@@ -88,7 +99,16 @@ async function checkListings(): Promise<void> {
 
 async function main() {
   await processTelegramMessages();
-  await checkListings();
+
+  const lastCheck = loadLastCheck();
+  if (Date.now() - lastCheck >= LISTING_CHECK_INTERVAL_MS) {
+    await checkListings();
+    saveLastCheck(Date.now());
+  } else {
+    console.log("Пропускаю перевірку AUTO.RIA — ще не минуло 5 хв від попередньої.");
+  }
+
+  persistMarksCache();
 }
 
 main().catch((err) => {
