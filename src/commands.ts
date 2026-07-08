@@ -24,18 +24,34 @@ function isSkip(text: string): boolean {
 
 const FUEL_LABELS: Record<number, string> = { 1: "бензин", 2: "дизель" };
 const GEAR_LABELS: Record<number, string> = { 2: "автомат" };
-const DRIVE_LABELS: Record<number, string> = { 1: "повний", 3: "задній" };
+const DRIVE_LABELS: Record<number, string> = { 1: "повний привід", 3: "задній привід" };
+
+function formatYearRange(s: Subscription): string {
+  if (s.s_yers && s.po_yers) return s.s_yers === s.po_yers ? String(s.s_yers) : `${s.s_yers}–${s.po_yers}`;
+  if (s.s_yers) return `${s.s_yers}+`;
+  if (s.po_yers) return `до ${s.po_yers}`;
+  return "будь-який рік";
+}
+
+function formatPriceRange(s: Subscription): string {
+  if (s.price_ot && s.price_do) return `$${s.price_ot}–${s.price_do}`;
+  if (s.price_ot) return `від $${s.price_ot}`;
+  if (s.price_do) return `до $${s.price_do}`;
+  return "будь-яка ціна";
+}
 
 function formatSubscription(s: Subscription): string {
-  const parts = [
-    `#${s.id} ${s.label}`,
-    `рік ${s.s_yers ?? "*"}-${s.po_yers ?? "*"}`,
-    `ціна ${s.price_ot ?? "*"}-${s.price_do ?? "*"}`,
+  const lines = [
+    `🚗 <b>${s.label}</b>  <code>#${s.id}</code>`,
+    `📅 ${formatYearRange(s)}   💰 ${formatPriceRange(s)}`,
   ];
-  if (s.fuel_id) parts.push(FUEL_LABELS[s.fuel_id] ?? `паливо #${s.fuel_id}`);
-  if (s.gear_id) parts.push(GEAR_LABELS[s.gear_id] ?? `КП #${s.gear_id}`);
-  if (s.drive_id) parts.push(DRIVE_LABELS[s.drive_id] ?? `привід #${s.drive_id}`);
-  return parts.join(" | ");
+  const traits = [
+    s.fuel_id ? `⛽ ${FUEL_LABELS[s.fuel_id] ?? `паливо #${s.fuel_id}`}` : null,
+    s.gear_id ? `⚙️ ${GEAR_LABELS[s.gear_id] ?? `КП #${s.gear_id}`}` : null,
+    s.drive_id ? `🧭 ${DRIVE_LABELS[s.drive_id] ?? `привід #${s.drive_id}`}` : null,
+  ].filter(Boolean);
+  if (traits.length > 0) lines.push(traits.join("   "));
+  return lines.join("\n");
 }
 
 function summary(data: WizardData): string {
@@ -65,7 +81,10 @@ export async function handleMessage(
   if (lower === "/list") {
     const subs = loadSubscriptions().filter((s) => s.chatId === chatId);
     if (subs.length === 0) return "У тебе ще немає фільтрів. Напиши /filter щоб додати.";
-    return subs.map(formatSubscription).join("\n");
+    const header = `📋 <b>Твої фільтри (${subs.length})</b>`;
+    const body = subs.map(formatSubscription).join("\n\n");
+    const footer = "➕ /filter — додати новий\n🗑 /remove &lt;номер&gt; — видалити";
+    return [header, body, footer].join("\n\n");
   }
 
   if (lower.startsWith("/remove")) {
