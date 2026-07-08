@@ -9,6 +9,9 @@ export interface Subscription {
   po_yers?: number;
   price_ot?: number;
   price_do?: number;
+  fuel_id?: number; // підтверджено: 2 = дизель
+  gear_id?: number; // підтверджено: 2 = автомат
+  drive_id?: number; // підтверджено: 3 = задній; повний ще не перевірено
 }
 
 export interface AutoInfo {

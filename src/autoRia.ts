@@ -36,6 +36,9 @@ export async function searchNewIds(sub: Subscription): Promise<string[]> {
   if (sub.po_yers) params.set("po_yers", String(sub.po_yers));
   if (sub.price_ot) params.set("price_ot", String(sub.price_ot));
   if (sub.price_do) params.set("price_do", String(sub.price_do));
+  if (sub.fuel_id) params.set("fuel_id", String(sub.fuel_id));
+  if (sub.gear_id) params.set("gear_id", String(sub.gear_id));
+  if (sub.drive_id) params.set("drive_id", String(sub.drive_id));
 
   const res = await fetch(`${SEARCH_URL}?${params.toString()}`);
   if (!res.ok) {
