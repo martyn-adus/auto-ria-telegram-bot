@@ -11,7 +11,10 @@ import { loadLastCheck, saveLastCheck } from "./lastCheck.js";
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-const LISTING_CHECK_INTERVAL_MS = 5 * 60 * 1000;
+// AUTO.RIA free-tier ліміт — 1000 запитів/міс. При N підписках кожен цикл
+// перевірки коштує N запитів (search), тож інтервал має тримати
+// N * (24h / INTERVAL) * 30 днів помітно нижче 1000, лишаючи запас на getInfo.
+const LISTING_CHECK_INTERVAL_MS = 12 * 60 * 60 * 1000;
 
 function isRateLimit(err: unknown): boolean {
   return err instanceof Error && err.message.includes("429");
