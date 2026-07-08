@@ -58,9 +58,15 @@ async function processTelegramMessages(): Promise<void> {
 async function checkListings(): Promise<void> {
   const subscriptions = loadSubscriptions();
   const seen = loadSeen();
+  const lastCheck = loadLastCheck();
 
   for (const sub of subscriptions) {
     const key = String(sub.id);
+    const lastCheckedAt = lastCheck[key] ?? 0;
+    if (Date.now() - lastCheckedAt < LISTING_CHECK_INTERVAL_MS) {
+      continue;
+    }
+
     console.log(`Перевіряю: #${sub.id} ${sub.label} (для ${sub.chatId})`);
 
     let ids: string[];
@@ -70,6 +76,8 @@ async function checkListings(): Promise<void> {
       console.error(err);
       continue;
     }
+
+    lastCheck[key] = Date.now();
 
     const seenIds = seen[key];
     const isFirstRun = seenIds === undefined;
@@ -98,19 +106,12 @@ async function checkListings(): Promise<void> {
   }
 
   saveSeen(seen);
+  saveLastCheck(lastCheck);
 }
 
 async function main() {
   await processTelegramMessages();
-
-  const lastCheck = loadLastCheck();
-  if (Date.now() - lastCheck >= LISTING_CHECK_INTERVAL_MS) {
-    await checkListings();
-    saveLastCheck(Date.now());
-  } else {
-    console.log("Пропускаю перевірку AUTO.RIA — ще не минуло 5 хв від попередньої.");
-  }
-
+  await checkListings();
   persistMarksCache();
 }
 
