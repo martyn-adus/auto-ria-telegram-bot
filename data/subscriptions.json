@@ -21,6 +21,7 @@
     "model_id": 652,
     "s_yers": 2020,
     "price_do": 19000,
+    "fuel_id": 1,
     "gear_id": 2
   },
   {
@@ -82,12 +83,13 @@
   {
     "id": 9,
     "chatId": "448762662",
-    "label": "Audi Q5 бензин 2.0 (перевіряти паливо вручну)",
+    "label": "Audi Q5 бензин 2.0",
     "category_id": 1,
     "marka_id": 6,
     "model_id": 3222,
     "s_yers": 2018,
-    "price_do": 20000
+    "price_do": 20000,
+    "fuel_id": 1
   },
   {
     "id": 10,
@@ -103,11 +105,13 @@
   {
     "id": 11,
     "chatId": "448762662",
-    "label": "Audi A4 B9 бензин quattro (перевіряти паливо/привід вручну)",
+    "label": "Audi A4 B9 бензин quattro",
     "category_id": 1,
     "marka_id": 6,
     "model_id": 47,
     "s_yers": 2015,
-    "price_do": 16000
+    "price_do": 16000,
+    "fuel_id": 1,
+    "drive_id": 1
   }
 ]
