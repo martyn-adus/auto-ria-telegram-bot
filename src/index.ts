@@ -15,6 +15,9 @@ const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 // перевірки коштує N запитів (search), тож інтервал має тримати
 // N * (24h / INTERVAL) * 30 днів помітно нижче 1000, лишаючи запас на getInfo.
 const LISTING_CHECK_INTERVAL_MS = 12 * 60 * 60 * 1000;
+// Невдалі спроби (429 тощо) повторюємо значно частіше за успішні, але не
+// щохвилини — інакше щохвилинний cron-тригер створює "громову отару" запитів.
+const RETRY_AFTER_ERROR_MS = 20 * 60 * 1000;
 
 function isRateLimit(err: unknown): boolean {
   return err instanceof Error && err.message.includes("429");
@@ -62,8 +65,9 @@ async function checkListings(): Promise<void> {
 
   for (const sub of subscriptions) {
     const key = String(sub.id);
-    const lastCheckedAt = lastCheck[key] ?? 0;
-    if (Date.now() - lastCheckedAt < LISTING_CHECK_INTERVAL_MS) {
+    const entry = lastCheck[key];
+    const interval = entry?.ok ? LISTING_CHECK_INTERVAL_MS : RETRY_AFTER_ERROR_MS;
+    if (entry && Date.now() - entry.at < interval) {
       continue;
     }
 
@@ -74,10 +78,11 @@ async function checkListings(): Promise<void> {
       ids = await searchNewIds(sub);
     } catch (err) {
       console.error(err);
+      lastCheck[key] = { at: Date.now(), ok: false };
       continue;
     }
 
-    lastCheck[key] = Date.now();
+    lastCheck[key] = { at: Date.now(), ok: true };
 
     const seenIds = seen[key];
     const isFirstRun = seenIds === undefined;
