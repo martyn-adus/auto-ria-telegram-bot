@@ -17,7 +17,10 @@ function requireEnv(name: string): string {
 
 export const AUTO_RIA_API_KEY = requireEnv("AUTO_RIA_API_KEY");
 export const TELEGRAM_BOT_TOKEN = requireEnv("TELEGRAM_BOT_TOKEN");
-export const TELEGRAM_CHAT_ID = requireEnv("TELEGRAM_CHAT_ID");
+export const TELEGRAM_CHAT_IDS = requireEnv("TELEGRAM_CHAT_ID")
+  .split(",")
+  .map((id) => id.trim())
+  .filter(Boolean);
 
 export const watchesPath = path.join(rootDir, "config", "watches.json");
 export const seenStorePath = path.join(rootDir, "data", "seen.json");
