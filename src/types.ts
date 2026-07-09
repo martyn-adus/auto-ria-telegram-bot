@@ -19,6 +19,7 @@ export interface AutoInfo {
   title: string;
   price: number | null;
   link: string;
+  isUniversal: boolean;
 }
 
 export type SeenStore = Record<string, string[]>;

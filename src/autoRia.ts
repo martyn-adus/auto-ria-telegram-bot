@@ -23,6 +23,32 @@ interface InfoResponse {
   };
 }
 
+// AUTO.RIA не документує точну назву/вкладеність поля з кузовом у /auto/info,
+// тож замість покладатись на конкретний шлях (наприклад autoData.bodyName)
+// рекурсивно шукаємо ознаку "універсал" будь-де у відповіді: підтверджено,
+// що body_id=2 == "Універсал" для category_id=1 (за офіційним
+// /auto/categories/1/bodystyles), але саме поле в /auto/info не перевірено
+// живим запитом (упирались у HourOverlimit) — тому широка евристика.
+const UNIVERSAL_BODY_ID = 2;
+const UNIVERSAL_WORDS = ["універсал", "универсал"];
+
+function containsUniversalMarker(value: unknown, depth = 0): boolean {
+  if (value == null || depth > 6) return false;
+  if (typeof value === "string") {
+    const lower = value.toLowerCase();
+    return UNIVERSAL_WORDS.some((w) => lower.includes(w));
+  }
+  if (typeof value === "object") {
+    for (const [key, v] of Object.entries(value as Record<string, unknown>)) {
+      if (/body/i.test(key) && (v === UNIVERSAL_BODY_ID || v === String(UNIVERSAL_BODY_ID))) {
+        return true;
+      }
+      if (containsUniversalMarker(v, depth + 1)) return true;
+    }
+  }
+  return false;
+}
+
 export async function searchNewIds(sub: Subscription): Promise<string[]> {
   const params = new URLSearchParams({
     api_key: AUTO_RIA_API_KEY,
@@ -74,5 +100,6 @@ export async function getInfo(id: string): Promise<AutoInfo> {
     title: title || `Оголошення ${id}`,
     price,
     link,
+    isUniversal: containsUniversalMarker(data),
   };
 }

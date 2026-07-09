@@ -98,8 +98,12 @@ async function checkListings(): Promise<void> {
       for (const id of newIds) {
         try {
           const info = await getInfo(id);
-          await sendListingToTelegram(sub.chatId, sub.label, info);
-          console.log(`  Надіслано: ${info.title} (${id})`);
+          if (info.isUniversal) {
+            console.log(`  Пропущено (універсал): ${info.title} (${id})`);
+          } else {
+            await sendListingToTelegram(sub.chatId, sub.label, info);
+            console.log(`  Надіслано: ${info.title} (${id})`);
+          }
         } catch (err) {
           console.error(`  Помилка для оголошення ${id}:`, err);
         }
