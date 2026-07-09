@@ -14,14 +14,29 @@ export interface TelegramUpdate {
   message?: TelegramMessage;
 }
 
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+// 409 Conflict trapляється, коли попередній (ще не завершений) запуск воркфлоу
+// одночасно тримає getUpdates-з'єднання — минається за пару секунд, тож просто
+// повторюємо кілька разів замість того, щоб валити весь check-run.
+const GET_UPDATES_MAX_RETRIES = 3;
+const GET_UPDATES_RETRY_DELAY_MS = 3000;
+
 export async function getUpdates(offset: number): Promise<TelegramUpdate[]> {
   const params = new URLSearchParams({ offset: String(offset), timeout: "0" });
-  const res = await fetch(`${API_BASE}/getUpdates?${params.toString()}`);
-  if (!res.ok) {
+
+  for (let attempt = 0; ; attempt++) {
+    const res = await fetch(`${API_BASE}/getUpdates?${params.toString()}`);
+    if (res.ok) {
+      const body = (await res.json()) as { ok: boolean; result: TelegramUpdate[] };
+      return body.result ?? [];
+    }
+    if (res.status === 409 && attempt < GET_UPDATES_MAX_RETRIES) {
+      await sleep(GET_UPDATES_RETRY_DELAY_MS);
+      continue;
+    }
     throw new Error(`Telegram getUpdates failed: ${res.status} ${res.statusText}`);
   }
-  const body = (await res.json()) as { ok: boolean; result: TelegramUpdate[] };
-  return body.result ?? [];
 }
 
 export async function sendMessage(chatId: string, text: string): Promise<void> {
